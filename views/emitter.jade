@@ -1,0 +1,37 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', type='text/css', href='css/style.css')
+    title live streaming
+    script(src='/socket.io/socket.io.js')
+  body
+    span.link1
+      .header
+       div(align='center')   
+         table(width='100%', cellspacing='25')
+           tr(style='font-size:15px;font-weight:bold')
+             
+             td(align='center', width='15%')
+               a(href='/') Home
+             td(align='center', width='15%')
+               a(href='/newCh') New Channel
+             td(align='center', width='15%')
+               a(href='/allCh') All channels 
+             td(align='center', width='20%')
+               a(href='/user/signin') Signin
+             td(align='center', width='20%')
+               a(href='/user/signup') Signup
+             td(align='center', width='20%')
+              a(href="/user/logout") logout
+    
+    div(style='text-align: center')
+      h2 Video Recording
+      p Record a 320x240 video
+      .select
+        label(for='videoSource') Video source: 
+        select#videoSource
+      video#home(style='width:320px;height:240px', ;='', autoplay='true')
+      br
+      button#rec(onclick='onBtnRecordClicked()') Record
+      canvas#preview(style='display:none')
+    script(src='js/emitter.js')
