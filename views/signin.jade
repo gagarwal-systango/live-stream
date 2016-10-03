@@ -1,56 +1,114 @@
 doctype html
 html
-  head
-    link(rel='stylesheet', type='text/css', href='css/style.css')
-    title live streaming
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  link(rel='stylesheet', href='./stylesheets/main.css')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
   body
-    span.link1
-      .header
-       div(align='center')   
-         table(width='100%', cellspacing='25')
-           tr(style='font-size:15px;font-weight:bold')
-             
-             td(align='center', width='15%')
-               a(href='/') Home
-             td(align='center', width='15%')
-               a(href='/newCh') New Channel
-             td(align='center', width='15%')
-               a(href='/allCh') All channels 
-             td(align='center', width='20%')
-               a(href='/user/signin') Signin
-             td(align='center', width='20%')
-               a(href='/user/signup') Signup
-             td(align='center', width='20%')
-              a(href="/user/logout") logout
-      br
-      br
-      br
+    nav.navbar.navbar-default
+      .container-fluid
+        // Brand and toggle get grouped for better mobile display
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') Live Stream
+        // Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='/pubsub') Publish/Subscribe
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                - if (user) { 
+                  p= user.user_id
+                - }
+                - else
+                  | account
+                -
+                span.caret
+              ul.dropdown-menu
+                
+                li
+                  a(href='/newch') new_channel
+                li
+                  a(href='/allch') All channels
+                li.divider(role='separator')
+                li
+                  a(href='/logout') logout
 
+
+    
+     body
       - if (msg.length > 0) { 
         div(align="center" style="color: red")
           p= msg 
-      - } 
-
-    div(align='center')
-      table
-        tr
-          td
-            form(action='/user/signin', method='post', name='loginform')
-              table(cellspacing='15')
-                tr
-                  td(colspan='2', align='center')
-                    h2(style='color:black') Login in to your Account
-                tr
-                  td(colspan='2')
-                    input(type='text', name='user_id', size='27', placeholder='UserId', style='color:gray')
-                tr
-                  td(colspan='2')
-                    input(type='password', name='password', size='27', placeholder='Password', style='color:gray')
-                tr
-                  td(colspan='2', align='center')
-                    input(type='submit', value='LOGIN', style='background-color:#B0C4DE;color:black;height:35px;width:70px; border-radius: 25px')
-                tr
-                  td
-                    a(href='/user/signin', style='color:black') Forgot Password
-                  td
-                    a(href='/user/signup', style='color:black') Register
+      - }
+      .login-signup
+        .row
+          .col-sm-6.nav-tab-holder
+            ul.nav.nav-tabs.row(role='tablist')
+              li.active.col-sm-8(role='presentation')
+                a(href='#signin', aria-controls='home', role='tab', data-toggle='tab') Sign in
+              li.col-sm-8(role='presentation')
+                a(href='#profile', aria-controls='profile', role='tab', data-toggle='tab') Sign Up
+        // Start first tab content
+        .tab-content
+          #signin.tab-pane.active(role='tabpanel')
+            .row
+              .col-sm-6.mobile-pull
+                article(role='login')
+                  //- h3.text-center
+                  //-   i.fa.fa-lock
+                  //-   | Sign In
+                  br
+                  form.form-horizontal(action='/signin', method='post', name='loginform')
+                    fieldset
+                      // Form Name
+                      legend
+                      // Text input
+                      .form-group
+                        label.col-md-4.control-label(for='textinput') Username
+                        .col-lg-8
+                          input#textinput.form-control.input-md(name='user_id', type='text', placeholder='username')
+                      // Password input
+                      .form-group
+                        label.col-md-4.control-label(for='password') Password
+                        .col-lg-8
+                          input#password.form-control.input-md(name='password', type='password', placeholder='password')
+                      // Button
+                      .form-group
+                        input.btn.btn-success.btn-block(type='submit', value='Submit')
+          // End first Tab content
+          // Start second Tab content
+          #profile.tab-pane(role='tabpanel')
+            .row
+              .col-sm-6.mobile-pull
+                article(role='login')
+                  //- h3.text-center  Sign Up
+                  br
+                  form.form-horizontal(action='/signup', method='post')
+                    fieldset
+                      // Form Name
+                      legend
+                      // Text input
+                      .form-group
+                        label.col-md-4.control-label(for='username') Username
+                        .col-lg-8
+                          input#username.form-control.input-md(name='user_id', type='text', placeholder='username')
+                      // Password input
+                      .form-group
+                        label.col-md-4.control-label(for='password') Password
+                        .col-lg-8
+                          input#password1.form-control.input-md(name='password', type='password', placeholder='password')
+                      // Password input
+                      .form-group
+                        label.col-md-4.control-label(for='passwordinput') Confirm Password
+                        .col-lg-8
+                          input#passwordinput.form-control.input-md(name='passwordinput', type='password', placeholder='confirm Password')
+                      // Button
+                      .form-group
+                        input.btn.btn-success.btn-block(type='submit', value='Sign Up')
+          // End Second Tab content

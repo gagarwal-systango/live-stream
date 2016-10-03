@@ -4,26 +4,43 @@ html
     link(rel='stylesheet', type='text/css', href='/css/style.css')
     title live streaming
     script(src='/socket.io/socket.io.js')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
   body
-    span.link1
-      .header
-       div(align='center')   
-         table(width='100%', cellspacing='25')
-           tr(style='font-size:15px;font-weight:bold')
-             
-             td(align='center', width='15%')
-               a(href='/') Home
-             td(align='center', width='15%')
-               a(href='/newCh') New Channel
-             td(align='center', width='15%')
-               a(href='/allCh') All channels 
-             td(align='center', width='20%')
-               a(href='/user/signin') Signin
-             td(align='center', width='20%')
-               a(href='/user/signup') Signup
-             td(align='center', width='20%')
-              a(href="/user/logout") logout
-
+    nav.navbar.navbar-default
+      .container-fluid
+        // Brand and toggle get grouped for better mobile display
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') Live Stream
+        // Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='/allch') All Channels
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                - if (user) { 
+                  p= user.user_id
+                - }
+                - else
+                  | account
+                -
+                span.caret
+              ul.dropdown-menu
+                
+                li
+                  a(href='/newch') new_channel
+                li
+                  a(href='#') Something else here
+                li.divider(role='separator')
+                li
+                  a(href='/logout') logout
     div(style='text-align: center')
       h1 video
       img#play(src='', style='width: 400px; height: 320px')
