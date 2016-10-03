@@ -11,6 +11,7 @@ var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var path = require('path');
+var port = process.env.PORT || 3000;
 
 var server = require('https').createServer({
       key: fs.readFileSync(__dirname+'/ssl/key.pem'),
@@ -20,7 +21,6 @@ var io = require('socket.io').listen(server);
 
 
 var index = require('./routes/index');
-var user = require('./routes/user');
 var ChannelChunks = require('./models/channelChunks.js');
 var ChannelFile = require('./models/channelFile.js');
 var Video = require('./models/video.js');
@@ -69,7 +69,6 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
 app.use('/', index);
-app.use('/user', user);
 
 var arr = [];
 
@@ -191,6 +190,6 @@ em.on('data available', function(arr, roomname){
 //       cert: fs.readFileSync('cert.pem')
 //     }, app).listen(3000);
 
-server.listen(3000, function() {
-	console.log('Server is running on port', 3000);
+server.listen(port, function() {
+	console.log('Server is running on port ' + port);
 });
