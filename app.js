@@ -23,6 +23,7 @@ var index = require('./routes/index');
 var user = require('./routes/user');
 var ChannelChunks = require('./models/channelChunks.js');
 var ChannelFile = require('./models/channelFile.js');
+var Video = require('./models/video.js');
 
 var events = require('events');
 var em = new events.EventEmitter();
@@ -79,10 +80,10 @@ io.use(function(socket, next) {
 io.sockets.on('connection', function (socket) { // First connection
     //var room = io.sockets.adapter.rooms;
     console.log('one user '+socket.id+' connected');
-    //console.log('chunk emitted from room '+room);
     
     var pubroom = socket.request.session.pubroom;
-    var subroom = socket.request.session.pubroom;
+    var subroom = socket.request.session.subroom;
+    var user_id = socket.request.session.passport.user;
     
     socket.on('add publisher', function(){
         socket.room = pubroom;
@@ -140,8 +141,25 @@ io.sockets.on('connection', function (socket) { // First connection
 	}	
     
    socket.on('disconnect', function () {
-    console.log('user disconnected');
-    socket.leave(socket.room);
+       if(pubroom){
+           ChannelFile.findOneAndUpdate({channelName : pubroom}, {live: false}, function(err, file) {
+		       if (err) {
+		       	console.log(err.stack);
+		       }
+               else
+                console.log('live video disconnected'); 
+                var video = new Video();
+                video.user_id = user_id;
+                video.channelName = pubroom;
+                video.save(function(err, file){
+                  if(err) throw err;
+                  socket.leave(pubroom);
+                  console.log('video linked to user.');
+                })
+           });
+       }
+       console.log('user disconnected');
+       socket.leave(socket.room);
    });
 
 });
