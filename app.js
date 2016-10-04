@@ -177,18 +177,13 @@ function saveChunk(buf, roomname){
 				throw err;
 			else 
                 console.log('chunk number: ' + file.n + ' saved');
-		})
+		});
 	});
-};
+}
 
 em.on('data available', function(arr, roomname){
     saveChunk(arr.shift(), roomname);
-})
-
-//  https.createServer({
-//       key: fs.readFileSync('key.pem'),
-//       cert: fs.readFileSync('cert.pem')
-//     }, app).listen(3000);
+});
 
 server.listen(port, function() {
 	console.log('Server is running on port ' + port);
