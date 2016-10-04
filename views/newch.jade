@@ -1,52 +1,4 @@
-//- doctype html
-//- html
-//-   head
-//-     link(rel='stylesheet', type='text/css', href='css/style.css')
-//-     title live streaming
-//-   body
-//-     span.link1
-//-       .header
-//-        div(align='center')   
-//-          table(width='100%', cellspacing='25')
-//-            tr(style='font-size:15px;font-weight:bold')
-             
-//-              td(align='center', width='15%')
-//-                a(href='/') Home
-//-              td(align='center', width='15%')
-//-                a(href='/newCh') New Channel
-//-              td(align='center', width='15%')
-//-                a(href='/allCh') All channels 
-//-              td(align='center', width='20%')
-//-                a(href='/user/signin') Signin
-//-              td(align='center', width='20%')
-//-                a(href='/user/signup') Signup
-//-              td(align='center', width='20%')
-//-               a(href="/user/logout") logout
 
-//-     - if (msg.length > 0) { 
-//-         div(align="center" style="color: red")
-//-           p= msg 
-//-     - }
-
-//-     div(align='center')
-//-           table
-//-             tr
-//-               td
-//-                 form(action='/newch', method='post', name='newchannel')
-//-                   table(cellspacing='15')
-//-                     tr
-//-                       td(colspan='2', align='center')
-//-                         h1(style='color:black') Create your new channel
-//-                     tr
-//-                       td(colspan='2',align='center')
-//-                         input(type='text', name='channelName', size='27', placeholder='name', style='color:gray')
-//-                     tr
-//-                       td(colspan='2',align='center')
-//-                         input(type='token', name='token', size='27', placeholder='token', style='color:gray')
-                    
-//-                     tr
-//-                       td(colspan='2', align='center')
-//-                         input(type='submit', value='submit', style='background-color:#B0C4DE;color:black;height:35px;width:70px; border-radius: 25px')
 doctype html
 html
   style.
@@ -59,7 +11,7 @@ html
     border-radius: 4px;
     box-sizing: border-box;
     }
-    input[type=submit] {
+    .ex4 {
     width: 100%;
     background-color: #483D8B;
     color: white;
@@ -78,7 +30,7 @@ html
     padding: 5px;
     }
     div.ex1 {
-      width:500px;
+      width:600px;
       margin: auto;
       }
   link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
@@ -102,12 +54,7 @@ html
               a(href='/allch') All Channels
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                - if (user) { 
-                  p= user.user_id
-                - }
-                - else
-                  | account
-                -
+                | account
                 span.caret
               ul.dropdown-menu
                 
@@ -131,4 +78,4 @@ html
         input#lname(type='text', name='token')
         
         
-        input(type='submit', value='Start Broadcasting')  
+        input(class='ex4',type='submit', value='Start Broadcasting')  

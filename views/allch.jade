@@ -1,16 +1,8 @@
 doctype html
 html
   head
-    style.
-      div {
-      border-radius: 5px;
-      background-color: #f2f2f2;
-      padding: 10px;
-      }
-      div.ex1 {
-      width:500px;
-      margin: auto;
-      }
+   
+      
     link(rel='stylesheet', type='text/css', href='css/style.css')
     title live streaming
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
@@ -26,7 +18,7 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='/') Live Stream
+          a.navbar-brand(href='/pusub') Live Stream
         // Collect the nav links, forms, and other content for toggling
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
@@ -34,12 +26,7 @@ html
               a(href='/allch') All Channels
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                - if (user) { 
-                  p= user.user_id
-                - }
-                - else
-                  | account
-                -
+                | account
                 span.caret
               ul.dropdown-menu
                 
@@ -52,7 +39,7 @@ html
                   a(href='/logout') logout 
    body
     
-      .ex1(align='center')
+      .ex3(align='center')
           h3(style ="text-align:center;color:#483D8B") Subscribe To Channel
            br
            br
@@ -63,5 +50,4 @@ html
                   p= ChannelFile[channel].channelName
                 br
             -} 
-   
    
