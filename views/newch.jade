@@ -1,6 +1,6 @@
+extends layout
 
-doctype html
-html
+block addStyle
   style.
     input[type=text], select {
     width: 100%;
@@ -33,49 +33,22 @@ html
       width:600px;
       margin: auto;
       }
-  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
-  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-  body
-    nav.navbar.navbar-default
-      .container-fluid
-        // Brand and toggle get grouped for better mobile display
-        .navbar-header
-          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href='/') Live Stream
-        // Collect the nav links, forms, and other content for toggling
-        #bs-example-navbar-collapse-1.collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-right
-            li
-              a(href='/allch') All Channels
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                | account
-                span.caret
-              ul.dropdown-menu
-                
-                li
-                  a(href='/newch') new_channel
-                li
-                  a(href='#') Something else here
-                li.divider(role='separator')
-                li
-                  a(href='/logout') logout
-  body
-    br
-    br
-    h3(style="text-align:center;color:#483D8B") Create your own channel
-    br
-    .ex1
-      form(action='/newch', method='post', name='newchannel')
-        label(for='fname') name
-        input#fname(type='text', name='channelName')
-        label(for='lname') token
-        input#lname(type='text', name='token')
-        
-        
-        input(class='ex4',type='submit', value='Start Broadcasting')  
+  link(rel='stylesheet', href='stylesheets/style.css')
+
+block content
+  br
+  br
+  - if (msg.length > 0) { 
+      p(style="color:red")= msg 
+  - }
+  h3(style="text-align:center;color:#483D8B") Create your own channel
+  br
+  .ex1
+    form(action='/newch', method='post', name='newchannel')
+      label(for='fname') Name
+      input#fname(type='text', name='channelName')
+      label(for='lname') Token
+      input#lname(type='text', name='token')
+      
+      
+      input(class='ex4',type='submit', value='Start Broadcasting')  
