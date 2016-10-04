@@ -1,0 +1,57 @@
+
+.header{
+    background-color:#B0C4DE;
+    height: 100px;
+    margin: 0px;
+    padding: 0px;
+}
+    
+
+
+
+.table{
+    color:black;
+    font-family:sans;
+}
+    
+body{
+    font-family:Sans MS;
+    height: 100%;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+.ex3 ul {
+    list-style-type: none;
+}
+ .refid{
+      display: block;    
+      width: 200px;    
+      height: 30px;    
+      background: #7B69ED;    
+      padding: 10px;    
+      text-align: center;    
+      border-radius: 5px;    
+      color: white;    
+ }
+ 
+  div {
+      margin: auto;
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      padding: 5px;
+      }
+  div.ex3 {
+      width:600px;
+      margin: auto;
+      }
+  div.ex2 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    }
+  div.ex1 {
+      width:600px;
+      margin: auto;
+      }
