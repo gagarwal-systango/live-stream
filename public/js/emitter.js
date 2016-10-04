@@ -46,7 +46,7 @@ if (getBrowser() == "Chrome") {
 
 var socket = io();
 videoSelect.onchange = function() {
-	videoSource = videoSelect.value
+	videoSource = videoSelect.value;
 	if (getBrowser() == "Chrome") {
 		constraints = {
 			"audio" : false,
@@ -116,7 +116,7 @@ function myLoop() {
 function draw(v, c, cw, ch) {
 	c.drawImage(v, 0, 0, cw, ch);
 	// image/png by default
-	var stringData = canvas.toDataURL('image/jpeg', 0.5);
+	var stringData = canvas.toDataURL('image/jpeg', 0.95);
 	socket.emit('image', stringData);
 }
 
