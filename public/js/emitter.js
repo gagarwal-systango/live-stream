@@ -116,7 +116,7 @@ function myLoop() {
 function draw(v, c, cw, ch) {
 	c.drawImage(v, 0, 0, cw, ch);
 	// image/png by default
-	var stringData = canvas.toDataURL('image/jpeg', 0.95);
+	var stringData = canvas.toDataURL('image/jpeg', 0.5);
 	socket.emit('image', stringData);
 }
 
