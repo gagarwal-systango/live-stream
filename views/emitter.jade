@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div(style='text-align: center')
+    h2 Video Recording
+    p Record a 320x240 video
+    .select
+      label(for='videoSource') Video source: 
+      select#videoSource
+    video#home(style='width:320px;height:240px', ;='', autoplay='true')
+    br
+    button#rec(onclick='onBtnRecordClicked()') Record
+    canvas#preview(style='display:none')
+  script(src='js/emitter.js')

@@ -1,0 +1,17 @@
+extends layout
+
+block addStyle
+  link(rel='stylesheet', href='stylesheets/style.css')
+
+block content    
+  .ex3(align='center')
+      h3(style ="text-align:center;color:#483D8B") Subscribe To Channel
+       br
+       br
+      ul(class="channels") 
+        -for(var channel=0; channel<ChannelFile.length; channel++) {  
+          li
+            a(class="refid", href='/channel/'+ChannelFile[channel].channelName) 
+              p= ChannelFile[channel].channelName
+            br
+        -} 

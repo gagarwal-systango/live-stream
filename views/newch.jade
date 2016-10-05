@@ -1,0 +1,54 @@
+extends layout
+
+block addStyle
+  style.
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+    .ex4 {
+    width: 100%;
+    background-color: #483D8B;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+    input[type=submit]:hover {
+    background-color: #483D8B;
+    }
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 5px;
+    }
+    div.ex1 {
+      width:600px;
+      margin: auto;
+      }
+  link(rel='stylesheet', href='stylesheets/style.css')
+
+block content
+  br
+  br
+  - if (msg.length > 0) { 
+      p(style="color:red")= msg 
+  - }
+  h3(style="text-align:center;color:#483D8B") Create your own channel
+  br
+  .ex1
+    form(action='/newch', method='post', name='newchannel')
+      label(for='fname') Name
+      input#fname(type='text', name='channelName')
+      label(for='lname') Token
+      input#lname(type='text', name='token')
+      
+      
+      input(class='ex4',type='submit', value='Start Broadcasting')  

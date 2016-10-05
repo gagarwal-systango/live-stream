@@ -1,0 +1,87 @@
+extends layout
+
+block content
+ br
+ br
+ br
+ - if (msg.length > 0) { 
+   div(align="center" style="color: red")
+     p= msg 
+ - }
+ .login-signup
+   .row
+     .col-sm-6.nav-tab-holder
+       ul.nav.nav-tabs.row(role='tablist')
+         li.active.col-sm-8(role='presentation')
+           a(href='#signin', aria-controls='home', role='tab', data-toggle='tab') Sign in
+         li.col-sm-8(role='presentation')
+           a(href='#profile', aria-controls='profile', role='tab', data-toggle='tab') Sign Up
+   // Start first tab content
+   .tab-content
+     #signin.tab-pane.active(role='tabpanel')
+       .row
+         .col-sm-6.mobile-pull
+           article(role='login')
+             //- h3.text-center
+             //-   i.fa.fa-lock
+             //-   | Sign In
+             br
+             form.form-horizontal(action='/signin', method='post', name='loginform')
+               fieldset
+                 // Form Name
+                 legend
+                 // Text input
+                 .form-group
+                   label.col-md-4.control-label(for='textinput') Username
+                   .col-lg-8
+                     input#textinput.form-control.input-md(name='user_id', type='text', maxlength="20", placeholder='username')
+                 // Password input
+                 .form-group
+                   label.col-md-4.control-label(for='password') Password
+                   .col-lg-8
+                     input#password.form-control.input-md(name='password', type='password', placeholder='password')
+                 // Button
+                 .form-group
+                   input.btn.btn-success.btn-block(type='submit', value='Submit')
+     // End first Tab content
+     // Start second Tab content
+     #profile.tab-pane(role='tabpanel')
+       .row
+         .col-sm-6.mobile-pull
+           article(role='login')
+             //- h3.text-center  Sign Up
+             br
+             form.form-horizontal(action='/signup', method='post' onsubmit="return checkpwd()" )
+               fieldset
+                 // Form Name
+                 legend
+                 // Text input
+                 .form-group
+                   label.col-md-4.control-label(for='username') Username
+                   .col-lg-8
+                     input#username.form-control.input-md(name='user_id', type='text', maxlength="20", placeholder='username')
+                 // Password input
+                 .form-group
+                   label.col-md-4.control-label(for='password') Password
+                   .col-lg-8
+                     input#password1.form-control.input-md(name='password', type='password', minlength="6", placeholder='password')
+                 // Password input
+                 .form-group
+                   label.col-md-4.control-label(for='passwordinput') Confirm Password
+                   .col-lg-8
+                     input#passwordinput.form-control.input-md(name='passwordinput', type='password', minlength="6", placeholder='confirm Password')
+                 // Button
+                 .form-group
+                   input.btn.btn-success.btn-block(type='submit', value='Sign Up')
+  script.
+    function checkpwd(){
+      var pwd = document.getElementById('password1').value;
+      var cnfpwd = document.getElementById('passwordinput').value;
+      if(pwd != cnfpwd){
+        alert('passwords do not match');
+        return false;
+      }
+      return true
+    }
+
+    
