@@ -13,10 +13,11 @@ var MongoStore = require('connect-mongo')(session);
 var path = require('path');
 var port = process.env.PORT || 3000;
 
-var server = require('https').createServer({
-      key: fs.readFileSync(__dirname+'/ssl/key.pem'),
-      cert: fs.readFileSync(__dirname+'/ssl/cert.pem')
-    }, app);
+// var server = require('https').createServer({
+//       key: fs.readFileSync(__dirname+'/ssl/key.pem'),
+//       cert: fs.readFileSync(__dirname+'/ssl/cert.pem')
+//     }, app);
+var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
 
