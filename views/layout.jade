@@ -21,15 +21,10 @@ html
           a.navbar-brand(href='/') Live Stream
         // Collect the nav links, forms, and other content for toggling
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          - if (user) { 
           ul.nav.navbar-nav.navbar-right
             li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                - if (user) { 
-                  p= user.user_id
-                - }
-                - else {
-                  | account
-                - }
+              a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')= user.user_id
                 span.caret
               ul.dropdown-menu
                 
@@ -37,10 +32,9 @@ html
                   a(href='/newch') Create channel
                 li
                   a(href='/allch') All channels
-                - if (user) { 
                 li.divider(role='separator')
                 li
                   a(href='/logout') logout
-                - }
+          - }
 
     block content  

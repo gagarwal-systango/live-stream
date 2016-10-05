@@ -6,27 +6,19 @@ block addStyle
 block content
   br
   br
-  .ex1(align='center')
-      div(class="ex2" align='center')
-        table(cellspacing='15')
-            
-            tr
-              td
-                br    
+  table(cellspacing='15' align="center")
+      
+      tr
+        td
+          br    
+     
+      tr
+        td
+          //- a(class="refid",href='/newch') img(src='./images/rec_icon.jpg')
+          a(href='/newch')
+             img(src='./images/rec.png',hspace="100")
            
-            tr
-              td
-                //- a(class="refid",href='/newch') img(src='./images/rec_icon.jpg')
-                a(href='/newch')
-                   img(src='./images/rec.png',hspace="100")
-                 
-                a(href='/allch')
-                   img(src='./images/sub_icon2.png',hspace="50")
-                   br
-                   br
-
-                    
-                
-                    
-       
-              
+          a(href='/allch')
+             img(src='./images/sub_icon2.png',hspace="50")
+             br
+             br                           
