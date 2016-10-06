@@ -17,7 +17,7 @@ socket.on('stream', function(image){
     // }
 });
 
-//dispImages(0);
+dispImages(0);
 
 function dispImages(i){
     var s = setTimeout(function () {   
