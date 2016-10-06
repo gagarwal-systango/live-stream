@@ -3,6 +3,7 @@ var img = document.getElementById("play");
 var chunk1 = [];
 var chunk2 = [];
 var img;
+var start = true;
 
 socket.on('connect', function() {
     socket.emit('add subscriber', prompt("Enter token"));
@@ -10,9 +11,13 @@ socket.on('connect', function() {
 
 socket.on('stream', function(image){
     chunk2.push(image);
+    if(chunk2.length>40 && start){
+        dispImages(0);
+        start = false;
+    }
 });
 
-dispImages(0);
+//dispImages(0);
 
 function dispImages(i){
     var s = setTimeout(function () {   
