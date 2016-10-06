@@ -16,14 +16,14 @@ dispImages(0);
 
 function dispImages(i){
     var s = setTimeout(function () {   
-	    if(chunk1.length==100 && i<=100){
+	    if(chunk1.length==100 && i<100){
             img = document.getElementById("play");
             img.src = chunk1[i];
 	        i++;
     	    dispImages(i);
 	    }  
         else if(chunk1.length==100 && chunk2.length<100){
-            img.src = chunk1[100];
+            img.src = chunk1[99];
             dispImages(i);
         }
         else if(chunk2.length<100){
