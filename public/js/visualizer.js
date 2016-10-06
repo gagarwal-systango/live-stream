@@ -11,10 +11,10 @@ socket.on('connect', function() {
 
 socket.on('stream', function(image){
     chunk2.push(image);
-    if(chunk2.length>40 && start){
-        dispImages(0);
-        start = false;
-    }
+    // if(chunk2.length>20 && start){
+    //     dispImages(0);
+    //     start = false;
+    // }
 });
 
 //dispImages(0);
