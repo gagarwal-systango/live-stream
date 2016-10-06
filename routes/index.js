@@ -30,12 +30,12 @@ router.post('/newch', function(req, res, next) {
             if (file) {
                 res.render('newch', { msg: 'channel name already exist!', user: req.user });
             } else {
-                var channelFile = new channelFile();
-                channelFile.channelName = req.body.channelName;
-                channelFile.totalChunks = 0;
-                channelFile.token = req.body.token;
-                channelFile.live = true;
-                channelFile.save(function(err, file) {
+                var channelfile = new channelFile();
+                channelfile.totalChunks = 0;
+                channelfile.channelName = req.body.channelName;
+                channelfile.token = req.body.token;
+                channelfile.live = true;
+                channelfile.save(function(err, file) {
                     if (err) throw err;
                     console.log("file: " + file.channelName);
                     req.session.pubroom = file.channelName;
