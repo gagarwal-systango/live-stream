@@ -16,21 +16,21 @@ dispImages(0);
 
 function dispImages(i){
     var s = setTimeout(function () {   
-	    if(chunk1.length==100 && i<100){
+	    if(chunk1.length>=5 && i<5){
             img = document.getElementById("play");
             img.src = chunk1[i];
 	        i++;
     	    dispImages(i);
 	    }  
-        else if(chunk1.length==100 && chunk2.length<100){
-            img.src = chunk1[99];
+        else if(chunk1.length==5 && chunk2.length<5){
+            img.src = chunk1[4];
             dispImages(i);
         }
-        else if(chunk2.length<100){
+        else if(chunk2.length<5){
             dispImages(i);
         }
         else {
-            chunk1 = chunk2.splice(0,100);
+            chunk1 = chunk2.splice(0,5);
             dispImages(0);
         }
     }, 100);
