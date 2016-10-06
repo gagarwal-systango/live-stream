@@ -22,6 +22,10 @@ function dispImages(i){
 	        i++;
     	    dispImages(i);
 	    }  
+        else if(chunk1.length==100 && chunk2.length<100){
+            img.src = chunk1[100];
+            dispImages(i);
+        }
         else if(chunk2.length<100){
             dispImages(i);
         }
