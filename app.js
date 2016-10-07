@@ -104,9 +104,9 @@ io.sockets.on('connection', function(socket) { // First connection
 
     function sendChunk(data) {
         socket.broadcast.to(socket.room).emit('stream', data);
-        var buf = new Buffer(data);
-        arr.push(data);
-        em.emit('data available', arr, socket.room);
+        //var buf = new Buffer(data);
+        //arr.push(data);
+        //em.emit('data available', arr, socket.room);
     }
 
 
@@ -117,10 +117,10 @@ io.sockets.on('connection', function(socket) { // First connection
                     console.log(err.stack);
                 } else
                     console.log('live video disconnected');
-                var userHistory = new userHistory();
-                userHistory.user_id = user_id;
-                userHistory.channelName = pubroom;
-                userHistory.save(function(err, file) {
+                var userhistory = new userHistory();
+                userhistory.user_id = user_id;
+                userhistory.channelName = pubroom;
+                userhistory.save(function(err, file) {
                     if (err) throw err;
                     socket.leave(pubroom);
                     console.log('video linked to user.');
@@ -138,11 +138,11 @@ function saveChunk(buf, roomname) {
         if (err) {
             console.log(err.stack);
         }
-        var channelChunk = new channelChunks();
-        channelChunk.channelFile = file;
-        channelChunk.data = buf.toString();
-        channelChunk.n = file.totalChunks;
-        channelChunk.save(function(err, file) {
+        var channelchunk = new channelChunks();
+        channelchunk.channelFile = file;
+        channelchunk.data = buf.toString();
+        channelchunk.n = file.totalChunks;
+        channelchunk.save(function(err, file) {
             if (err)
                 throw err;
             else

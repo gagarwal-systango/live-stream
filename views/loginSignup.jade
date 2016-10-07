@@ -40,6 +40,7 @@ block content
                    label.col-md-4.control-label(for='password') Password
                    .col-lg-8
                      input#password.form-control.input-md(name='password', type='password', placeholder='password')
+                 br
                  // Button
                  .form-group
                    input.btn.btn-success.btn-block(type='submit', value='Submit')
@@ -70,9 +71,10 @@ block content
                    label.col-md-4.control-label(for='passwordinput') Confirm Password
                    .col-lg-8
                      input#passwordinput.form-control.input-md(name='passwordinput', type='password', minlength="6", placeholder='confirm Password')
+                 br
                  // Button
                  .form-group
-                   input.btn.btn-success.btn-block(type='submit', value='Sign Up')
+                   input.btn.btn-success.btn-block(type='submit', value='Submit')
   script.
     function checkpwd(){
       var pwd = document.getElementById('password1').value;

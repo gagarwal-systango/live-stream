@@ -1,7 +1,7 @@
 // connection with Mongo db.
 var mongoose = require('mongoose');
 
-var url = "mongodb://admin:admin@ds049496.mlab.com:49496/liveStreaming";
+var url = "mongodb://systango:systango1@ds047325.mlab.com:47325/livestreaming";
 
 //connect to the mongod server
 mongoose.connect(url);
