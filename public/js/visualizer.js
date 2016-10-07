@@ -10,7 +10,8 @@ socket.on('connect', function() {
 });
 
 socket.on('stream', function(image){
-    chunk2.push(image);
+    var img = pako.inflate(image, { to: 'string' });
+    chunk2.push(img);
     // if(chunk2.length>20 && start){
     //     dispImages(0);
     //     start = false;

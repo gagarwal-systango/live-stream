@@ -11,6 +11,7 @@ var flash = require('connect-flash');
 var validator = require('express-validator');
 var mongoStore = require('connect-mongo')(session);
 var path = require('path');
+var zlib = require('zlib');
 var port = process.env.PORT || 3000;
 
 var server = require('http').createServer(app);
@@ -103,8 +104,22 @@ io.sockets.on('connection', function(socket) { // First connection
     socket.on('image', sendChunk);
 
     function sendChunk(data) {
-        socket.broadcast.to(socket.room).emit('stream', data);
-        //var buf = new Buffer(data);
+        console.log('data: '+ data.length);
+        zlib.deflate(data, function(err, compData){
+            if (!err) {
+                socket.broadcast.to(socket.room).emit('stream', compData);
+                //console.log(compData.toString('base64'));
+                // console.log(compData.toString('base64').length);
+                // zlib.unzip(compData, function(err, buffer) {
+                //     if (!err) {
+                //       console.log(buffer.toString());
+                //     }
+                // });
+            }
+        });
+        
+        //socket.broadcast.to(socket.room).emit('stream', data);
+        //var buf = new Buffer(data, "ascii").toString('base64');
         //arr.push(data);
         //em.emit('data available', arr, socket.room);
     }
