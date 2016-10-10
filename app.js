@@ -139,7 +139,7 @@ io.sockets.on('connection', function(socket) { // First connection
                     console.log('live video disconnected');
 
                 userHistory.findOne({ $exists: true, user_id: user_id }, { $exists: true, channelName: channelName }, function(err, doc) {
-                    if (doc === null) {
+                    if (doc === undefined || doc === null) {
                         var userhistory = new userHistory();
                         userhistory.user_id = user_id;
                         userhistory.channelName = channelName;
