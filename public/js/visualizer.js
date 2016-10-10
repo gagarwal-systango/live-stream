@@ -11,29 +11,8 @@ socket.on('connect', function() {
 
 socket.on('stream', function(image) {
     var imgData = pako.inflate(image, { to: 'string' });
-    chunk2.push(imgData);
+    img.src = imgData;
 });
-
-dispImages(0);
-
-function dispImages(i) {
-    var s = setTimeout(function() {
-        if (chunk1.length >= 5 && i < 5) {
-            img = document.getElementById("play");
-            img.src = chunk1[i];
-            i++;
-            dispImages(i);
-        } else if (chunk1.length == 5 && chunk2.length < 5) {
-            img.src = chunk1[4];
-            dispImages(i);
-        } else if (chunk2.length < 5) {
-            dispImages(i);
-        } else {
-            chunk1 = chunk2.splice(0, 5);
-            dispImages(0);
-        }
-    }, 100);
-}
 
 socket.on('tokenError', function(data) {
     alert(data);
