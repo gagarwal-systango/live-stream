@@ -12,13 +12,9 @@ socket.on('connect', function() {
 socket.on('stream', function(image) {
     var imgData = pako.inflate(image, { to: 'string' });
     chunk2.push(imgData);
-    if (chunk2.length > 10) {
-        img.src = chunk2.shift;
-    }
-
 });
 
-//dispImages(0);
+dispImages(0);
 
 function dispImages(i) {
     var s = setTimeout(function() {
