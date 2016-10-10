@@ -1,0 +1,17 @@
+extends layout
+
+block addStyle
+  link(rel='stylesheet', href='stylesheets/style.css')
+
+block content    
+  .ex3(align='center')
+      h3(style ="text-align:center;color:#483D8B") User History
+       br
+       br
+      ul(class="channels") 
+        -for(var history=0; history<UserHistory.length; history++) {  
+          li
+            a(class="refid", href='/history/'+UserHistory[history].channelName) 
+              p= UserHistory[history].channelName
+            br
+        -} 

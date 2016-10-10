@@ -9,7 +9,7 @@ block content
       select#videoSource
     video#home(style='width:320px;height:240px', ;='', autoplay='true')
     br
-    button#rec(onclick='onBtnRecordClicked()') Record
+    button#rec(onclick='onBtnRecordClicked()') Record  
+    button#stop(onclick='onBtnStopClicked()') Stop
     canvas#preview(style='display:none')
-  script(src="/js/pako.js")
   script(src='js/emitter.js')

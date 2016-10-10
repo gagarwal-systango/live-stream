@@ -104,26 +104,53 @@ io.sockets.on('connection', function(socket) { // First connection
 
     function sendChunk(data) {
         socket.broadcast.to(socket.room).emit('stream', data);
-        //var buf = new Buffer(data);
-        //arr.push(data);
-        //em.emit('data available', arr, socket.room);
+        var buf = new Buffer(data);
+        arr.push(data);
+        em.emit('data available', arr, socket.room);
     }
 
+    socket.on('historyReq', function() {
+        channelFile.findOne({ channelName: app.get('channelName') }, function(err, file) {
+            if (err) throw err;
+            console.log(file);
+            channelChunks.find({ channelFile: file._id }, function(err, chunks) {
+                if (err) throw err;
+                allChunks(0);
 
+                function allChunks(index) {
+                    if (chunks.length > index) {
+                        setTimeout(function() {
+                            socket.emit('historyData', chunks[index].data);
+                            allChunks(++index);
+                        }, 100);
+                    }
+                }
+            })
+
+        });
+    });
     socket.on('disconnect', function() {
-        if (pubroom) {
-            channelFile.findOneAndUpdate({ channelName: pubroom }, { live: false }, function(err, file) {
+        var channelName = pubroom || subroom;
+        if (channelName) {
+            channelFile.findOneAndUpdate({ channelName: channelName }, { live: false }, function(err, file) {
                 if (err) {
                     console.log(err.stack);
                 } else
                     console.log('live video disconnected');
-                var userhistory = new userHistory();
-                userhistory.user_id = user_id;
-                userhistory.channelName = pubroom;
-                userhistory.save(function(err, file) {
-                    if (err) throw err;
-                    socket.leave(pubroom);
-                    console.log('video linked to user.');
+
+                userHistory.findOne({ $exists: true, user_id: user_id }, { $exists: true, channelName: channelName }, function(err, doc) {
+                    if (doc === null) {
+                        var userhistory = new userHistory();
+                        userhistory.user_id = user_id;
+                        userhistory.channelName = channelName;
+                        userhistory.save(function(err, file) {
+                            if (err) throw err;
+                            socket.leave(channelName);
+                            console.log('video linked to user.');
+                        })
+                    } else {
+                        console.log('user exists');
+                    }
                 })
             });
         }

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var channelFile = require('./../models/channelFile.js')
+var channelFile = require('./../models/channelFile.js');
+var userHistory = require('./../models/userHistory.js');
 var passport = require('passport');
 var path = require('path');
 
@@ -14,6 +15,19 @@ router.get('/allCh', isLoggedIn, function(req, res) {
         if (err) throw err;
         res.render('allch', { ChannelFile: files, user: req.user });
     });
+});
+
+router.get('/history', isLoggedIn, function(req, res) {
+    userHistory.find({ user_id: req.user }, function(err, files) {
+        if (err) throw err;
+        res.render('historyList', { UserHistory: files, user: req.user });
+    });
+});
+
+router.get('/history/:channelName', isLoggedIn, function(req, res) {
+    req.app.set('channelName', req.params.channelName);
+    req.session.historyChannel = req.params.channelName;
+    res.render('viewHistory', { name: req.params.channelName, user: req.user });
 });
 
 router.get('/newch', isLoggedIn, function(req, res, next) {
@@ -55,11 +69,6 @@ router.get('/channel/:channelName', isLoggedIn, function(req, res) {
     req.session.subroom = req.params.channelName;
     res.render('visualizer', { name: req.params.channelName, user: req.user });
 });
-
-router.get('/hs', function(req, res, next) {
-    res.render('hs');
-});
-
 
 router.get('/logout', isLoggedIn, function(req, res, next) {
     //removing session
