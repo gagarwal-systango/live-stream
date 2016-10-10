@@ -9,30 +9,31 @@ socket.on('connect', function() {
     socket.emit('add subscriber', prompt("Enter token"));
 });
 
-socket.on('stream', function(image){
+socket.on('stream', function(image) {
     var imgData = pako.inflate(image, { to: 'string' });
-    img.src = imgData;
+    chunk2.push(imgData);
+    if (chunk2.length > 10) {
+        img.src = chunk2.shift;
+    }
+
 });
 
 //dispImages(0);
 
-function dispImages(i){
-    var s = setTimeout(function () {   
-	    if(chunk1.length>=5 && i<5){
+function dispImages(i) {
+    var s = setTimeout(function() {
+        if (chunk1.length >= 5 && i < 5) {
             img = document.getElementById("play");
             img.src = chunk1[i];
-	        i++;
-    	    dispImages(i);
-	    }  
-        else if(chunk1.length==5 && chunk2.length<5){
+            i++;
+            dispImages(i);
+        } else if (chunk1.length == 5 && chunk2.length < 5) {
             img.src = chunk1[4];
             dispImages(i);
-        }
-        else if(chunk2.length<5){
+        } else if (chunk2.length < 5) {
             dispImages(i);
-        }
-        else {
-            chunk1 = chunk2.splice(0,5);
+        } else {
+            chunk1 = chunk2.splice(0, 5);
             dispImages(0);
         }
     }, 100);
