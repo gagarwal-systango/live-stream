@@ -1,5 +1,5 @@
 var express = require('express');
-var app = express();
+var app = module.exports = express();
 var mongoose = require('mongoose');
 var fs = require('fs');
 var bodyParser = require('body-parser');
@@ -12,28 +12,11 @@ var validator = require('express-validator');
 var mongoStore = require('connect-mongo')(session);
 var path = require('path');
 var port = process.env.PORT || 3000;
+var config = require('./config/server').get(process.env.NODE_ENV);
 
-// var server = {
-//   production: {
-    
-//     //database: 'mongodb://systango:systango1@ds047325.mlab.com:47325/livestreaming',
-//     server: require('http').createServer(app)
-    
-//   },
-//   development: {
-    
-//     //database: 'mongodb://localhost:27017/canvas',
-//      server: require('https').createServer(app)
-    
-//   }
-// }
+var server = config.server
 
-
-
- var server = require('https').createServer(app);
 var io = require('socket.io').listen(server);
-
-// var config = require('./env.json')[process.env.NODE_ENV || 'development'];
 
 var index = require('./routes/index');
 var channelChunks = require('./models/channelChunks.js');
@@ -46,13 +29,6 @@ var em = new events.EventEmitter();
 require('./config/server');
 require('./config/passport');
 
-// app.config('development', function(){
-// app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-// });
-
-// app.config('production', function(){
-//   app.use(express.errorHandler()); 
-// });
 
 app.use(express.static(path.resolve(__dirname, 'public')));
 
