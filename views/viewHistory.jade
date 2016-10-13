@@ -1,0 +1,10 @@
+
+extends layout
+
+block content
+  div(style='text-align: center')
+    h1 video
+    img#play(src='', style='width: 400px; height: 320px')
+    br
+    button#start(onclick='onBtnStartClicked()') Start
+  script(type='text/javascript', src='/js/history.js')
