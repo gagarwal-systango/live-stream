@@ -11,14 +11,9 @@ var flash = require('connect-flash');
 var validator = require('express-validator');
 var mongoStore = require('connect-mongo')(session);
 var path = require('path');
-var port = process.env.PORT || 3000;
 var config = require('./config/server').get(process.env.NODE_ENV);
 var nodeSpotifyWebHelper = require('node-spotify-webhelper');
 var spotifySDK = require('spotify-port-scanner-node');
-
-var server = config.server
-
-var io = require('socket.io').listen(server);
 
 var index = require('./routes/index');
 var channelChunks = require('./models/channelChunks.js');
@@ -26,6 +21,10 @@ var channelFile = require('./models/channelFile.js');
 var userHistory = require('./models/userHistory.js');
 var audioInfo = require('./models/audioinfo.js');
 
+var port = process.env.PORT || 3000;
+var server = config.server;
+
+var io = require('socket.io').listen(server);
 var events = require('events');
 var em = new events.EventEmitter();
 
@@ -73,32 +72,29 @@ app.use('/', index);
 
 var arr = [];
 
+  //to use session in io socket it creates middleware
 io.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
 });
-
-io.sockets.on('connection', function(socket) { // First connection
-    //var room = io.sockets.adapter.rooms;
+ 
+io.sockets.on('connection', function(socket) {   // First connection
+    
     console.log('one user ' + socket.id + ' connected');
     var spotify;
     var pubroom = socket.request.session.pubroom;
     var subroom = socket.request.session.subroom;
     var user_id = socket.request.session.passport.user;
 
-    socket.on('add publisher', function() {
+    socket.on('add publisher', function() {   //connect spotify to our app
          var client = new spotifySDK.SpotifyClient();
-        //console.log('client is: ');
-        //console.log(client);
         client.connect({
-                lowPort: 4000,
+                lowPort: 3000,
                 highPort: 4800
             })
             .then(() => {
-                console.log(client.getPort());
+                console.log("Spotify connected on port:"+ client.getPort());
                 spotify = new nodeSpotifyWebHelper.SpotifyWebHelper({ port: client.getPort() });
-                //console.log('spotify is: ');
-                //console.log(spotify);
-            })
+                })
             .catch(error => {
                 console.log("Spotify Connection Error", error);
             });
@@ -107,7 +103,7 @@ io.sockets.on('connection', function(socket) { // First connection
     });
 
     socket.on('add subscriber', function(token) {
-        //socket.room = roomname;
+        
         channelFile.findOne({ channelName: subroom }, function(err, file) {
             if (!file) {
                 socket.emit('tokenError', 'channel name is incorrect!');
@@ -120,7 +116,7 @@ io.sockets.on('connection', function(socket) { // First connection
 
     });
     
-socket.on('image', sendChunk);
+socket.on('image', sendChunk);   //streaming video and audioinfo
 var counter=0;
 function sendChunk(imgdata) {
     
@@ -130,14 +126,14 @@ function sendChunk(imgdata) {
  
     counter++;  
     var audiodata = new Object();
-    if(counter==20){
-        //console.log(spotify);
+    if(counter==20){   //sending audio info after every 20 chunks of video data
+        
         if (spotify !== null && spotify !== undefined) {
             spotify.getStatus(function(err, res) {
                 if (err) {
                     return console.error(err);
                 }
-                //audiodata = new Object();
+                
                 audiodata.id = res.track.track_resource.uri;
                 audiodata.playingPosition = res.playing_position;
                  console.log('pos is: '+audiodata.playingPosition);
@@ -159,7 +155,7 @@ function sendChunk(imgdata) {
     
 }
 
-    socket.on('historyReq', function() {
+    socket.on('historyReq', function() {  //fetching video history
         channelFile.findOne({ channelName: app.get('channelName') }, function(err, file) {
             if (err) throw err;
             console.log(file);
@@ -179,7 +175,7 @@ function sendChunk(imgdata) {
 
         });
     });
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function() {   //storing video history 
         var channelName = pubroom || subroom;
         if (channelName) {
             channelFile.findOneAndUpdate({ channelName: channelName }, { live: false }, function(err, file) {
@@ -212,7 +208,7 @@ function sendChunk(imgdata) {
 
 });
 
-function saveChunk(data, roomname) {
+function saveChunk(data, roomname) {   //storing chunks of data
     channelFile.findOneAndUpdate({ channelName: roomname }, { $inc: { totalChunks: 1 } }, function(err, file) {
         if (err) {
             console.log(err.stack);
