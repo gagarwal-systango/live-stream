@@ -16,7 +16,7 @@ var config = require('./config/server').get(process.env.NODE_ENV);
 var nodeSpotifyWebHelper = require('node-spotify-webhelper');
 var spotifySDK = require('spotify-port-scanner-node');
 
-var server = config.server;
+var server = config.server
 
 var io = require('socket.io').listen(server);
 
