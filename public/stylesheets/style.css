@@ -56,3 +56,40 @@ div.ex1 {
     width: 600px;
     margin: auto;
 }
+
+body {
+     font-size: 18px; 
+     display: inline  
+    }
+    .green-circle-button {
+    	box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+    	border: .5em solid green;
+    	font-size: 1em;
+    	line-height: 1.1em;
+    	color: #ffffff;
+        background-color: #439A46;
+    	margin: auto;
+    	border-radius: 50%;
+    	height: 7em;
+    	width: 7em;
+    	position: relative;
+     }
+    .green-circle-button:hover {
+    	color:black;
+      background-color: whitesmoke;
+    	text-decoration: none;
+    	border-color:#1F9F23;
+    
+    }
+    
+    .green-circle-link-greater-than {
+        font-size: 1em;
+    }
+
+.Blink {
+  animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}  

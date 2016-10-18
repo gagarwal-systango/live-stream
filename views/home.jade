@@ -2,23 +2,81 @@ extends layout
 
 block addStyle
   link(rel='stylesheet', href='stylesheets/style.css')
+ 
+  style.
+    body {
+     font-size: 18px; 
+     display: inline  
+    }
+    .orange-circle-button {
+    	box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+    	border: .5em solid #EE1C25;
+    	font-size: 1em;
+    	line-height: 1.1em;
+    	color: white;
+    	background-color: #FC454C;#e84d0e
+    	margin: auto;
+    	border-radius: 50%;
+    	height: 7em;
+    	width: 7em;
+    	position: relative;
+    }
+    .orange-circle-button:hover {
+    	color:black;
+      background-color: white;
+    	text-decoration: none;
+    	border-color:#FFA7AA;
+    
+    }
+    
+    .orange-circle-link-greater-than {
+        font-size: 1em;
+    }
 
+                   
 block content
-  br
-  br
-  table(cellspacing='15' align="center")
+        //.container()
+        //.row
+         // .col-md-12()
+        body
+        br
+        br
+        form(method='get', action='/newch')
+           button(type='submit',class='btn btn-default orange-circle-button',hspace="100")
+              | Record
+              br
+              | here
+              br
+              span.orange-circle-greater-than 
+        br
+        br
+        br  
+         
+        form(method='get', action='/allch')
+           button(type='submit',class='btn btn-default green-circle-button',hspace="100")
+              | subscribe
+              br
+              | here
+              
+              span.green-circle-greater-than       
+
+
+//- block content
+//-   br
+//-   br
+//-   table(cellspacing='15' align="center")
       
-      tr
-        td
-          br    
+//-       tr
+//-         td
+//-           br    
      
-      tr
-        td
-          //- a(class="refid",href='/newch') img(src='./images/rec_icon.jpg')
-          a(href='/newch')
-             img(src='./images/rec.png',hspace="100")
+//-       tr
+//-         td
+//-           //- a(class="refid",href='/newch') img(src='./images/rec_icon.jpg')
+//-           a(href='/newch')
+//-              img(src='./images/rec.png',hspace="100")
            
-          a(href='/allch')
-             img(src='./images/sub_icon2.png',hspace="50")
-             br
-             br                           
+//-           a(href='/allch')
+//-              img(src='./images/sub_icon2.png',hspace="50")
+//-              br
+//-              br           

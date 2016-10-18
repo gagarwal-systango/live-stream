@@ -1,0 +1,29 @@
+{
+  "name": "live-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "socket.io": "*",
+    "express": "^4.14.0",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express-session": "^1.14.0",
+    "express-validator": "^2.20.8",
+    "passport": "^0.3.2",
+    "bcrypt-nodejs": "^0.0.3",
+    "passport-local": "^1.0.0",
+    "connect-flash": "0.1.1",
+    "connect-mongo": "^1.3.2",
+    "jade": "*",
+    "mongoose": "*",
+    "node-spotify-webhelper": "^0.0.5",
+    "spotify-port-scanner-node": "1.0.3"
+    },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

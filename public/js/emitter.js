@@ -6,7 +6,7 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 var videoSelect = document.querySelector('select#videoSource');
 
 var videoSource = videoSelect.value;
-
+var chunks = [];
 if (getBrowser() == "Chrome") {
     var constraints = {
         "audio": false,
@@ -72,6 +72,7 @@ socket.on('connect', function() {
 });
 
 var recBtn = document.querySelector('button#rec');
+var stopBtn = document.querySelector('button#stop');
 var video = document.getElementById('home');
 var canvas = document.getElementById('preview');
 var context = canvas.getContext('2d');
@@ -107,7 +108,7 @@ function errorCallback(error) {
     console.log('navigator.getUserMedia error: ', error);
 }
 
-function myLoop() {
+function drawVideoImage() {
     setInterval(function() {
         draw(video, context, context.width, context.height);
     }, 100);
@@ -117,11 +118,13 @@ function draw(v, c, cw, ch) {
     c.drawImage(v, 0, 0, cw, ch);
     // image/png by default
     var stringData = canvas.toDataURL('image/jpeg', 0.5);
-    socket.emit('image', stringData);
+    var imgData = pako.deflate(stringData, { to: 'string' });
+    socket.emit('image', imgData);
 }
 
 function successCallback(stream) {
     window.stream = stream; // make stream available to console
+    chunks.push(stream);
     video.src = window.URL.createObjectURL(stream);
     video.play();
 }
@@ -136,9 +139,26 @@ function onBtnRecordClicked() {
             // window.stream.stop();
         }
         navigator.getUserMedia(constraints, successCallback, errorCallback);
-        myLoop();
+        drawVideoImage();
         recBtn.disabled = true;
+        stopBtn.disabled = false;
     }
+}
+
+
+function onBtnStopClicked() {
+    if (window.stream) {
+        video.src = null;
+        window.stream.getVideoTracks()[0].stop();
+        // window.stream.stop();
+    }
+    var blob = new Blob(chunks, { type: "video/webm" });
+    chunks = [];
+    var videoURL = window.URL.createObjectURL(blob);
+    video.src = videoURL;
+    video.play();
+    recBtn.disabled = false;
+    stopBtn.disabled = true;
 }
 
 function log(message) {

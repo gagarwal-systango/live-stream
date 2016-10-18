@@ -1,5 +1,5 @@
 var express = require('express');
-var app = express();
+var app = module.exports = express();
 var mongoose = require('mongoose');
 var fs = require('fs');
 var bodyParser = require('body-parser');
@@ -12,15 +12,19 @@ var validator = require('express-validator');
 var mongoStore = require('connect-mongo')(session);
 var path = require('path');
 var port = process.env.PORT || 3000;
+var config = require('./config/server').get(process.env.NODE_ENV);
+var nodeSpotifyWebHelper = require('node-spotify-webhelper');
+var spotifySDK = require('spotify-port-scanner-node');
 
-var server = require('http').createServer(app);
+var server = config.server;
+
 var io = require('socket.io').listen(server);
-
 
 var index = require('./routes/index');
 var channelChunks = require('./models/channelChunks.js');
 var channelFile = require('./models/channelFile.js');
 var userHistory = require('./models/userHistory.js');
+var audioInfo = require('./models/audioinfo.js');
 
 var events = require('events');
 var em = new events.EventEmitter();
@@ -46,7 +50,7 @@ var sessionMiddleware = session({
     saveUninitialized: false, //if true: Forces a session that is "uninitialized" to be saved to the store
     store: new mongoStore({ mongooseConnection: mongoose.connection }), //use existing mongoose connection
     cookie: ({ maxAge: 24 * 60 * 60 * 1000 }) //session expiry time in set-cookie attribute  
-})
+});
 app.use(sessionMiddleware);
 
 app.use(flash());
@@ -76,12 +80,28 @@ io.use(function(socket, next) {
 io.sockets.on('connection', function(socket) { // First connection
     //var room = io.sockets.adapter.rooms;
     console.log('one user ' + socket.id + ' connected');
-
+    var spotify;
     var pubroom = socket.request.session.pubroom;
     var subroom = socket.request.session.subroom;
     var user_id = socket.request.session.passport.user;
 
     socket.on('add publisher', function() {
+         var client = new spotifySDK.SpotifyClient();
+        //console.log('client is: ');
+        //console.log(client);
+        client.connect({
+                lowPort: 4000,
+                highPort: 4800
+            })
+            .then(() => {
+                console.log(client.getPort());
+                spotify = new nodeSpotifyWebHelper.SpotifyWebHelper({ port: client.getPort() });
+                //console.log('spotify is: ');
+                //console.log(spotify);
+            })
+            .catch(error => {
+                console.log("Spotify Connection Error", error);
+            });
         socket.room = pubroom;
         socket.join(pubroom);
     });
@@ -99,32 +119,91 @@ io.sockets.on('connection', function(socket) { // First connection
         });
 
     });
-
-    socket.on('image', sendChunk);
-
-    function sendChunk(data) {
-        socket.broadcast.to(socket.room).emit('stream', data);
-        //var buf = new Buffer(data);
-        //arr.push(data);
-        //em.emit('data available', arr, socket.room);
+    
+socket.on('image', sendChunk);
+var counter=0;
+function sendChunk(imgdata) {
+    
+    socket.broadcast.to(socket.room).emit('stream', imgdata);
+    var data = new Object();
+    data.imgData = imgdata;
+ 
+    counter++;  
+    var audiodata = new Object();
+    if(counter==20){
+        //console.log(spotify);
+        if (spotify !== null && spotify !== undefined) {
+            spotify.getStatus(function(err, res) {
+                if (err) {
+                    return console.error(err);
+                }
+                //audiodata = new Object();
+                audiodata.id = res.track.track_resource.uri;
+                audiodata.playingPosition = res.playing_position;
+                 console.log('pos is: '+audiodata.playingPosition);
+                if (audiodata !== null && audiodata !== undefined) {
+                    socket.broadcast.to(socket.room).emit('stream1', audiodata);
+                } 
+                data.audioData = audiodata;
+                arr.push(data);
+                em.emit('data available', arr, socket.room);
+            });            
+        }
+        counter=0;
     }
+    else {
+        data.audioData = audiodata;
+        arr.push(data);
+        em.emit('data available', arr, socket.room);
+    }
+    
+}
 
+    socket.on('historyReq', function() {
+        channelFile.findOne({ channelName: app.get('channelName') }, function(err, file) {
+            if (err) throw err;
+            console.log(file);
+            channelChunks.find({ channelFile: file._id }, function(err, chunks) {
+                if (err) throw err;
+                allChunks(0);
 
+                function allChunks(index) {
+                    if (chunks.length > index) {
+                        setTimeout(function() {
+                            socket.emit('historyData', chunks[index].data);
+                            allChunks(++index);
+                        }, 100);
+                    }
+                }
+            });
+
+        });
+    });
     socket.on('disconnect', function() {
-        if (pubroom) {
-            channelFile.findOneAndUpdate({ channelName: pubroom }, { live: false }, function(err, file) {
+        var channelName = pubroom || subroom;
+        if (channelName) {
+            channelFile.findOneAndUpdate({ channelName: channelName }, { live: false }, function(err, file) {
                 if (err) {
                     console.log(err.stack);
                 } else
                     console.log('live video disconnected');
-                var userhistory = new userHistory();
-                userhistory.user_id = user_id;
-                userhistory.channelName = pubroom;
-                userhistory.save(function(err, file) {
-                    if (err) throw err;
-                    socket.leave(pubroom);
-                    console.log('video linked to user.');
-                })
+
+     
+                   userHistory.findOne({user_id: user_id, channelName: channelName }, function(err, doc) {
+                    if (doc === undefined || doc === null) {  
+                       
+                        var userhistory = new userHistory();
+                        userhistory.user_id = user_id;
+                        userhistory.channelName = channelName;
+                        userhistory.save(function(err, file) {
+                            if (err) throw err;
+                            socket.leave(channelName);
+                            console.log('video linked to user.');
+                        });
+                 } else {
+                        console.log('user exists');                                            
+                    }
+                });
             });
         }
         console.log('user disconnected');
@@ -133,20 +212,35 @@ io.sockets.on('connection', function(socket) { // First connection
 
 });
 
-function saveChunk(buf, roomname) {
+function saveChunk(data, roomname) {
     channelFile.findOneAndUpdate({ channelName: roomname }, { $inc: { totalChunks: 1 } }, function(err, file) {
         if (err) {
             console.log(err.stack);
         }
         var channelchunk = new channelChunks();
         channelchunk.channelFile = file;
-        channelchunk.data = buf.toString();
+        channelchunk.data = data.imgData.toString();
         channelchunk.n = file.totalChunks;
         channelchunk.save(function(err, file) {
-            if (err)
+            if (err){
                 throw err;
-            else
+            }
+            else {
                 console.log('chunk number: ' + file.n + ' saved');
+                if(data.audioData.id !== undefined){
+                    var audioinfo = new audioInfo();
+                    audioinfo.channelChunk = file;
+                    audioinfo.audio_pos = data.audioData.playingPosition;
+                    audioinfo.song_id = data.audioData.id;
+                    audioinfo.save(function(err, file){
+                        if(err) throw err;
+                        else {
+                            console.log('audio saved');
+                        }
+                    })
+                }
+                
+            }
         });
     });
 }
