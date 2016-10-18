@@ -86,10 +86,31 @@ body {
         font-size: 1em;
     }
 
-.Blink {
-  animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
-}
-@keyframes blinker {  
-  from { opacity: 1; }
-  to { opacity: 0; }
-}  
+body {
+     font-size: 18px; 
+     display: inline  
+    }
+    .orange-circle-button {
+    	box-shadow: 2px 4px 0 2px rgba(0,0,0,0.1);
+    	border: .5em solid #EE1C25;
+    	font-size: 1em;
+    	line-height: 1.1em;
+    	color: white;
+    	background-color: #FC454C;
+    	margin: auto;
+    	border-radius: 50%;
+    	height: 7em;
+    	width: 7em;
+    	position: relative;
+    }
+    .orange-circle-button:hover {
+    	color:black;
+      background-color: white;
+    	text-decoration: none;
+    	border-color:#FFA7AA;
+    
+    }
+    
+    .orange-circle-link-greater-than {
+        font-size: 1em;
+    }
