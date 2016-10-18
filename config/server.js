@@ -4,27 +4,28 @@ var app = require('../app');
 // connection with Mongo db.
 var mongoose = require('mongoose');
 
+//here we have a common config file in which seperate dev and prod properties are set.
 var config = {
+  
   production: {
-    
     database: 'mongodb://systango:systango1@ds047325.mlab.com:47325/livestreaming',
     server: require('http').createServer(app)
-  },
+   },
   
   development: {
-    
-    database: 'mongodb://localhost:27017/canvas',
+    database: 'mongodb://localhost:27017/Livestreaming',
     server:  require('https').createServer({
        key: fs.readFileSync(__dirname+'/ssl/key.pem'),
        cert: fs.readFileSync(__dirname+'/ssl/cert.pem')
      }, app)
     
-  }
-}
+    }
+} 
 
 exports.get = function get(env) {
   return config[env] || config.development;
 }
+
 mongoose.connect(config[process.env.NODE_ENV].database, function (err, res) {
      if (err) {
      console.log ('ERROR connecting to: ' + config[process.env.NODE_ENV].database + '. ' + err);

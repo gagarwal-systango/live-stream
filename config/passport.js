@@ -52,7 +52,8 @@ passport.use('local.signin', new localStrategy({
     usernameField: 'user_id',
     passwordField: 'password',
     passReqToCallback: true
-}, function(req, user_id, password, done) {
+}, 
+function(req, user_id, password, done) {
     req.checkBody('user_id', 'invalid user_id').notEmpty();
     req.checkBody('password', 'invalid password').notEmpty();
     var errors = req.validationErrors();

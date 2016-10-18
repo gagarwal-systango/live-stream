@@ -13,7 +13,8 @@ var mongoStore = require('connect-mongo')(session);
 var path = require('path');
 var config = require('./config/server').get(process.env.NODE_ENV);
 var nodeSpotifyWebHelper = require('node-spotify-webhelper');
-var spotifySDK = require('spotify-port-scanner-node');
+//var spotifySDK = require('spotify-port-scanner-node');
+var SpotifySDK = require('node-spotify-webhelper-portscanner');
 
 var index = require('./routes/index');
 var channelChunks = require('./models/channelChunks.js');
@@ -72,7 +73,7 @@ app.use('/', index);
 
 var arr = [];
 
-  //to use session in io socket it creates middleware
+  //to use session in socket io, it creates middleware.
 io.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
 });
@@ -86,22 +87,37 @@ io.sockets.on('connection', function(socket) {   // First connection
     var user_id = socket.request.session.passport.user;
 
     socket.on('add publisher', function() {   //connect spotify to our app
-         var client = new spotifySDK.SpotifyClient();
-        client.connect({
-                lowPort: 3000,
-                highPort: 4800
-            })
-            .then(() => {
-                console.log("Spotify connected on port:"+ client.getPort());
-                spotify = new nodeSpotifyWebHelper.SpotifyWebHelper({ port: client.getPort() });
-                })
-            .catch(error => {
+        //  var client = new spotifySDK.SpotifyClient();
+        // client.connect({
+        //         lowPort: 3000,
+        //         highPort: 4800
+        //     })
+        //     .then(() => {
+        //         console.log("Spotify connected on port:"+ client.getPort());
+        //         spotify = new nodeSpotifyWebHelper.SpotifyWebHelper({ port: client.getPort() });
+        //         })
+        //     .catch(error => {
+        //         console.log("Spotify Connection Error", error);
+        //     });
+
+         var spotifyClient = new SpotifySDK(); // init with default port 
+        spotifyClient.scanPorts({
+          lowPort : 4000,
+          highPort : 4500
+          }, 
+          function(error, ports) {
+            if(error){
                 console.log("Spotify Connection Error", error);
-            });
+            }
+            else {
+                console.log("Spotify connected on port: "+ ports[0].port);
+                spotify = new nodeSpotifyWebHelper.SpotifyWebHelper(ports[0]);
+            }
+        });   
         socket.room = pubroom;
         socket.join(pubroom);
     });
-
+    
     socket.on('add subscriber', function(token) {
         
         channelFile.findOne({ channelName: subroom }, function(err, file) {
@@ -129,7 +145,7 @@ function sendChunk(imgdata) {
     if(counter==20){   //sending audio info after every 20 chunks of video data
         
         if (spotify !== null && spotify !== undefined) {
-            spotify.getStatus(function(err, res) {
+            spotify.getStatus(function(err, res) {  //gives information about song currently playing in spotify.
                 if (err) {
                     return console.error(err);
                 }
@@ -177,29 +193,30 @@ function sendChunk(imgdata) {
     });
     socket.on('disconnect', function() {   //storing video history 
         var channelName = pubroom || subroom;
-        if (channelName) {
-            channelFile.findOneAndUpdate({ channelName: channelName }, { live: false }, function(err, file) {
+        if (pubroom) {
+            channelFile.findOneAndUpdate({ channelName: pubroom }, { live: false }, function(err, file) {
                 if (err) {
                     console.log(err.stack);
-                } else
+                } else{
                     console.log('live video disconnected');
-
-     
-                   userHistory.findOne({user_id: user_id, channelName: channelName }, function(err, doc) {
-                    if (doc === undefined || doc === null) {  
-                       
-                        var userhistory = new userHistory();
-                        userhistory.user_id = user_id;
-                        userhistory.channelName = channelName;
-                        userhistory.save(function(err, file) {
-                            if (err) throw err;
-                            socket.leave(channelName);
-                            console.log('video linked to user.');
-                        });
-                 } else {
-                        console.log('user exists');                                            
-                    }
+                }
+       if (channelName){ 
+                userHistory.findOne({user_id: user_id, channelName: channelName }, function(err, doc) {
+                  if (doc === undefined || doc === null) {  
+                     
+                      var userhistory = new userHistory();
+                      userhistory.user_id = user_id;
+                      userhistory.channelName = channelName;
+                      userhistory.save(function(err, file) {
+                          if (err) throw err;
+                          socket.leave(channelName);
+                          console.log('video linked to user.');
+                      });
+               } else {
+                      console.log('user exists');                                            
+                      }
                 });
+              }
             });
         }
         console.log('user disconnected');
@@ -208,7 +225,7 @@ function sendChunk(imgdata) {
 
 });
 
-function saveChunk(data, roomname) {   //storing chunks of data
+function saveStreamData(data, roomname) {   //storing first it will save chunks and them corresponding to chunks it will save audioinfo
     channelFile.findOneAndUpdate({ channelName: roomname }, { $inc: { totalChunks: 1 } }, function(err, file) {
         if (err) {
             console.log(err.stack);
@@ -232,17 +249,16 @@ function saveChunk(data, roomname) {   //storing chunks of data
                         if(err) throw err;
                         else {
                             console.log('audio saved');
-                        }
-                    })
-                }
-                
-            }
+                             }
+                      })
+                    }
+                 }
         });
     });
 }
 
 em.on('data available', function(arr, roomname) {
-    saveChunk(arr.shift(), roomname);
+    saveStreamData(arr.shift(), roomname);
 });
 
 server.listen(port, function() {
