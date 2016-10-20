@@ -21,3 +21,8 @@ This project describes how to stream live video.
 5. Start the app: NODE_ENV=development/production npm start
 6. View in browser at: https://localhost:3000
 7. Broadcast Video!
+
+## Future Enhancements
+
+- Play song on native spotify player and stream song informatiom along with video.
+- Subscriber will watch video and also listen song on its native palyer from position it started watching video. 

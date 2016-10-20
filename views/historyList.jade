@@ -9,9 +9,11 @@ block content
        br
        br
       ul(class="channels") 
-        -for(var history=0; history<UserHistory.length; history++) {  
+        -for(var history=0; history<UserHistory.length; history++) {
           li
             a(class="refid", href='/history/'+UserHistory[history].channelName) 
               p= UserHistory[history].channelName
             br
         -} 
+
+        //-for(var history=UserHistory.length; history<2; history--) {  

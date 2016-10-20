@@ -7,6 +7,8 @@ var videoSelect = document.querySelector('select#videoSource');
 
 var videoSource = videoSelect.value;
 var chunks = [];
+var interval;
+
 if (getBrowser() == "Chrome") {
     var constraints = {
         "audio": false,
@@ -109,7 +111,7 @@ function errorCallback(error) {
 }
 
 function drawVideoImage() {
-    setInterval(function() {
+    interval = setInterval(function() {
         draw(video, context, context.width, context.height);
     }, 100);
 }
@@ -117,7 +119,7 @@ function drawVideoImage() {
 function draw(v, c, cw, ch) {
     c.drawImage(v, 0, 0, cw, ch);
     // image/png by default
-    var stringData = canvas.toDataURL('image/jpeg', 0.5);
+    var stringData = canvas.toDataURL('image/jpeg', 0.7);
     var imgData = pako.deflate(stringData, { to: 'string' });
     socket.emit('image', imgData);
 }
@@ -136,7 +138,7 @@ function onBtnRecordClicked() {
         if (window.stream) {
             video.src = null;
             window.stream.getVideoTracks()[0].stop();
-            // window.stream.stop();
+            
         }
         navigator.getUserMedia(constraints, successCallback, errorCallback);
         drawVideoImage();
@@ -150,7 +152,7 @@ function onBtnStopClicked() {
     if (window.stream) {
         video.src = null;
         window.stream.getVideoTracks()[0].stop();
-        // window.stream.stop();
+        
     }
     var blob = new Blob(chunks, { type: "video/webm" });
     chunks = [];
@@ -159,6 +161,7 @@ function onBtnStopClicked() {
     video.play();
     recBtn.disabled = false;
     stopBtn.disabled = true;
+    clearInterval(interval);
 }
 
 function log(message) {

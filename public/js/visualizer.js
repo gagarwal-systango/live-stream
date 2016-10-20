@@ -52,3 +52,16 @@ socket.on('tokenError', function(data) {
     alert(data);
     socket.emit('add subscriber', prompt("Enter token"));
 });
+
+
+
+function fullsize() {    
+    $('.main').removeClass('min_image');
+    img.style.height='100%';
+    img.style.width='100%';
+    }
+
+function minimize() {    
+  $('.main').addClass('min_image');
+ }
+
