@@ -116,6 +116,7 @@ function drawVideoImage() {
     }, 100);
 }
 
+//capturing images and emitting
 function draw(v, c, cw, ch) {
     c.drawImage(v, 0, 0, cw, ch);
     // image/png by default
