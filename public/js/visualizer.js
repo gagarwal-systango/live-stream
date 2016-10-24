@@ -57,16 +57,20 @@ socket.on('tokenError', function(data) {
     socket.emit('add subscriber', prompt("Please open your spotify and then enter token"));
 });
 var max= document.getElementById('max');
+var min= document.getElementById('min');
 
 
 function fullsize() {    
-    $('.main').removeClass('min_image');
-    img.style.height='100%';
-    img.style.width='100%';
-    max.style.diaplay=none;
-    }
+  $('.main').removeClass('min_image');
+  img.style.height='100%';
+  img.style.width='100%';
+  max.style.display="none";
+  min.style.display = "block"; 
+  }
 
 function minimize() {    
   $('.main').addClass('min_image');
+  min.style.display="none";
+  max.style.display = "block";
  }
 
