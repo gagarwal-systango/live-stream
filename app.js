@@ -195,7 +195,7 @@ function sendChunk(imgdata) {
         channelFile.findOne({ channelName: app.get('channelName') }, function(err, file) {
             if (err) throw err;
             console.log(file);
-            channelChunks.find({ channelFile: file._id }, function(err, chunks) {
+            channelChunks.find({ channelFile: file.id }, function(err, chunks) {
                 if (err) throw err;
                 allChunks(0);
 
@@ -220,7 +220,7 @@ function sendChunk(imgdata) {
                 if (err) {
                     console.log(err.stack);
                 } else{
-                    //socket.request.session.pubroom = null;
+                    
                     console.log(pubroom+': live video disconnected');
                 }
                  });
