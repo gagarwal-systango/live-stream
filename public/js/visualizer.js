@@ -6,7 +6,7 @@ var chunk2 = [];
 var start = true;
 
 socket.on('connect', function() {
-    socket.emit('add subscriber', prompt("please open your spotify and then Enter token"));
+    socket.emit('add subscriber', prompt("please enter token"));
 });
 
 socket.on('stream', function(image){
@@ -54,7 +54,7 @@ socket.on('stream1', function(audioData) {
 
 socket.on('tokenError', function(data) {
     alert(data);
-    socket.emit('add subscriber', prompt("Please open your spotify and then enter token"));
+    socket.emit('add subscriber', prompt("Please enter token"));
 });
 var max= document.getElementById('max');
 var min= document.getElementById('min');

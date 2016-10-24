@@ -2,12 +2,13 @@
 extends layout
 
 block content
-
-  div(style='text-align: center')
-   
-    img#play(src='', style='width: 400px; height: 320px')
+  body(style=' background-image: url("/images/bg2.jpg");background-size: cover')
+  div(style='text-align: center ;position: relative')
     br
-    button#start(onclick='onBtnStartClicked()') Start
+    br
+    br
+    img#play(src='',  style='width: 400px; height: 320px; border-radius:8px; border: 3px solid #ddd;  border-color:#A9A3D1')
+    br
   script(type='text/javascript', src='/js/history.js')
 
   

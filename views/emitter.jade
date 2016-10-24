@@ -1,15 +1,23 @@
 extends layout
-
+block addStyle
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
 block content
+  body(style=' background-image: url("/images/bg2.jpg");background-size: cover')
   div(style='text-align: center')
     h2 Video Recording
     p Record a 320x240 video
+    br
     .select
       label(for='videoSource') Video source: 
       select#videoSource
-    video#home(style='width:320px;height:240px', ;='', autoplay='true')
+    br  
+    video#home(style='width: 320px; height: 240px; border-radius:8px; border: 3px solid #ddd; border-color:#A9A3D1', autoplay='true')
     br
-    button#rec(onclick='onBtnRecordClicked()') Record  
-    button#stop(onclick='onBtnStopClicked()') Stop
+    button#rec(onclick='onBtnRecordClicked()') 
+     span.glyphicon.glyphicon-facetime-video
+    button#stop(onclick='onBtnStopClicked()') 
+     span.glyphicon.glyphicon-pause
     canvas#preview(style='display:none')
   script(src='js/emitter.js')
